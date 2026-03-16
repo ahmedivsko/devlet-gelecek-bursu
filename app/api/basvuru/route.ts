@@ -55,9 +55,10 @@ export async function POST(req: Request) {
       });
     }
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: "Burs Basvuru <onboarding@resend.dev>",
-      to: "ahmethankaradag21@gmail.com",
+      to: ["ahmethankaradag21@gmail.com"],
+      replyTo: email,
       subject: "Yeni Burs Basvurusu",
       html: `
         <h2>Yeni Başvuru</h2>
@@ -73,7 +74,15 @@ export async function POST(req: Request) {
       attachments,
     });
 
-    return Response.json({ success: true });
+    if (error) {
+      console.error("Resend hata:", error);
+      return Response.json(
+        { success: false, error: error.message || "Mail gonderilemedi" },
+        { status: 500 }
+      );
+    }
+
+    return Response.json({ success: true, data });
   } catch (error) {
     console.error("Basvuru gonderim hatasi:", error);
     return Response.json(

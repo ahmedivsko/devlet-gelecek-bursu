@@ -61,47 +61,42 @@ export default function Home() {
                 </div>
 
                 <form
-                  action="/api/basvuru"
-                  method="POST"
-                  encType="multipart/form-data"
                   className="space-y-4"
                   onSubmit={async (e) => {
                     e.preventDefault()
                     setLoading(true)
+                    setSuccess(false)
+
                     const form = e.currentTarget
                     const data = new FormData(form)
 
                     try {
-                      const response = await fetch(form.action, {
+                      const response = await fetch("/api/basvuru", {
                         method: "POST",
                         body: data,
-                        headers: {
-                          Accept: "application/json",
-                        },
                       })
 
-                      if (!response.ok) {
-                        throw new Error("Gönderim başarısız")
+                      const result = await response.json()
+
+                      if (!response.ok || !result.success) {
+                        throw new Error(result.error || "Gönderim başarısız")
                       }
 
                       form.reset()
                       setOpen(false)
                       setSuccess(true)
                     } catch (error) {
+                      console.error(error)
                       alert("Gönderim sırasında bir sorun oluştu. Lütfen tekrar deneyin.")
                     } finally {
                       setLoading(false)
                     }
                   }}
                 >
-                  <input type="hidden" name="_subject" value="Yeni burs başvurusu" />
-                  <input type="hidden" name="_captcha" value="false" />
-                  <input type="hidden" name="_template" value="table" />
-
                   <div className="grid gap-3 md:grid-cols-2">
                     <input
                       required
-                      name="Ad Soyad"
+                      name="name"
                       className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/35 focus:bg-white/10"
                       placeholder="Ad Soyad"
                     />
@@ -109,7 +104,7 @@ export default function Home() {
                     <input
                       required
                       type="email"
-                      name="E-posta"
+                      name="email"
                       className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/35 focus:bg-white/10"
                       placeholder="E-posta"
                     />
@@ -189,7 +184,7 @@ export default function Home() {
                         required
                         type="file"
                         name="Transkript"
-                        accept=".pdf,.jpg,.png"
+                        accept=".pdf,.jpg,.jpeg,.png"
                         className="mt-2 block w-full text-xs"
                       />
                     </label>
@@ -200,7 +195,7 @@ export default function Home() {
                         required
                         type="file"
                         name="YKS Belgesi"
-                        accept=".pdf,.jpg,.png"
+                        accept=".pdf,.jpg,.jpeg,.png"
                         className="mt-2 block w-full text-xs"
                       />
                     </label>
@@ -208,6 +203,7 @@ export default function Home() {
 
                   <div className="flex flex-col gap-3 pt-1 md:flex-row">
                     <button
+                      type="submit"
                       disabled={loading}
                       className="flex-1 rounded-2xl bg-white px-6 py-3 font-medium tracking-wide text-black transition duration-300 hover:-translate-y-0.5 hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-60"
                     >
