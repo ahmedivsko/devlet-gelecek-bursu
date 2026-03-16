@@ -61,7 +61,7 @@ export default function Home() {
                 </div>
 
                 <form
-                  action="https://formsubmit.co/YENI_MAIL_ADRESINIZ@example.com"
+                  action="https://formsubmit.co/ajax/ahmethankaradag21@gmail.com"
                   method="POST"
                   encType="multipart/form-data"
                   className="space-y-4"
