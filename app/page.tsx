@@ -61,7 +61,7 @@ export default function Home() {
                 </div>
 
                 <form
-                  action="https://formsubmit.co/ajax/ahmethankaradag21@gmail.com"
+                  action="/api/basvuru"
                   method="POST"
                   encType="multipart/form-data"
                   className="space-y-4"
